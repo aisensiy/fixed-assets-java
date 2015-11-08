@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tw.mapper.CategoryMapper">
+    <resultMap id="resultCategory" type="com.tw.domain.Category">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <association property="policy" javaType="com.tw.domain.Policy">
+            <id property="id" column="policyId" />
+            <result property="percentage" column="percentage"/>
+            <result property="factor" column="factor" />
+            <result property="termLengthByMonth" column="termLengthByMonth" />
+        </association>
+    </resultMap>
+
+    <insert id="save"  keyProperty="category.id">
+        INSERT INTO categories (name) values (#{category.name})
+    </insert>
+
+    <select id="getById" resultMap="resultCategory">
+        SELECT
+         category.id as id,
+         category.name as name,
+         policy.id as policyId,
+         policy.factor,
+         policy.percentage,
+         policy.termLengthByMonth
+         FROM categories as category left join policies as policy on category.id = policy.categoryId
+         where category.id = #{id}
+    </select>
+</mapper>

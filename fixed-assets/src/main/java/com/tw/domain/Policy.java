@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Policy implements Record {
-    private final int percentage;
-    private final int factor;
-    private final int termLengthByMonth;
+    private int percentage;
+    private int factor;
+    private int termLengthByMonth;
     int id;
+    private Category category;
 
     public Policy(int percentage, int factor, int termLengthByMonth) {
 
         this.percentage = percentage;
         this.factor = factor;
         this.termLengthByMonth = termLengthByMonth;
+    }
+
+    public Policy() {
     }
 
     public int getPercentage() {
@@ -44,5 +48,9 @@ public class Policy implements Record {
     @Override
     public Map<String, Object> toRefJson() {
         return toJson();
+    }
+
+    public Category getCategory() {
+        return category;
     }
 }

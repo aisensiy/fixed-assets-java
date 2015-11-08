@@ -16,6 +16,9 @@ public class Category implements Record {
 
     }
 
+    public Category() {
+    }
+
     public int getId() {
         return id;
     }
