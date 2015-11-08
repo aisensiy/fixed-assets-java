@@ -1,0 +1,14 @@
+---
+
+repos:
+  - location: https://sjkyspa@github.com/sjkyspa/ums.git
+    password: jksun123
+    name: ums
+
+  - location: https://sjkyspa@github.com/kiwiwin/midas.git
+    password: jksun123
+    name: midas
+
+  - location: https://sjkyspa@github.com/kiwiwin/midas-mvp.git
+    password: jksun123
+    name: midas-mvp

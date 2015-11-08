@@ -1,0 +1,22 @@
+---
+- name: install expect
+  yum: name=expect state=latest
+
+#- name: install tmux latest
+#  yum: name=ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/kalyaka/CentOS_CentOS-6/x86_64/tmux-1.8-6.1.x86_64.rpm state=present
+
+- name: create workspace
+  file: path=/workspace
+        state=directory
+        recurse=yes
+- name: get all cloned git repos
+  shell: ls
+         chdir=/workspace
+  register: cloned_repos
+
+- name: clone git
+  shell: expect -c "spawn /usr/bin/git clone "{{ item.location }}"; expect -re \".*Password:.*\" {send \""{{item.password}}"\r\"}; interact"
+         chdir=/workspace
+         creates="{{item.name}}/.git/config"
+  with_items: repos
+

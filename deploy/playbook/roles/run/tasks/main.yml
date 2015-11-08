@@ -1,0 +1,16 @@
+---
+
+- shell: ./gradlew flywayClean && ./gradlew flywayMigrate
+  sudo: yes
+  args:
+    chdir: /home/vagrant/app
+
+- shell: ./gradlew build
+  sudo: yes
+  args:
+    chdir: /home/vagrant/app
+
+- shell: nohup ./gradlew run &
+  sudo: yes
+  args:
+    chdir: /home/vagrant/app

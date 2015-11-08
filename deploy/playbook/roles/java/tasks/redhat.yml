@@ -1,0 +1,15 @@
+---
+
+- name: Check JDK Downloaded
+  stat: path=jdk-8u20-linux-x64.rpm
+  register: jdk_exist
+
+- name: install wget
+  yum: name=wget state=present
+
+- name: download Oracle JDK RPM
+  shell: 'wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm -O jdk-8u20-linux-x64.rpm'
+  when: not jdk_exist.stat.exists
+
+- name: install Oracle JDK RPM
+  yum: name=jdk-8u20-linux-x64.rpm state=present

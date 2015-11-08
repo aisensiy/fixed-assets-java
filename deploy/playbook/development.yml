@@ -1,0 +1,41 @@
+---
+# install nginx
+- hosts: local-dev
+  sudo: yes
+  roles:
+    - nginx
+
+- hosts: local-dev
+  sudo: yes
+  roles:
+    - java
+
+# install java mysql
+- hosts: local-dev
+  sudo: yes
+  vars:
+    mysql_db:
+         - name: fixed_assets
+           replicate: no
+
+    mysql_users:
+         - name: mysql
+           pass: mysql
+           priv: "*.*:ALL"
+           host: "%"
+         - name: mysql
+           pass: mysql
+           priv: "*.*:ALL"
+           host: "localhost"
+
+    innodb_buffer_pool_size: 50M
+
+    mysql_repl_role: master
+    mysql_db_id: 7
+  roles:
+    - common
+    - db.mysql
+
+- hosts: local-dev
+  roles:
+    - run

@@ -1,0 +1,8 @@
+---
+- name: save iptables
+  sudo: true
+  command: iptables-save
+
+- name: restart iptables
+  service: name= ufw state=restarted
+  sudo: true

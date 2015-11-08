@@ -1,0 +1,8 @@
+---
+mysql_service: mysqld
+timezone: "+08:00"
+mysql_conf_dir: "/etc/"
+
+mysql_port: 3306
+mysql_bind_address: "0.0.0.0"
+mysql_root_db_pass: mysql

@@ -1,0 +1,52 @@
+---
+- name: create sentinel working directory
+  file: path={{ redis_sentinel_dir }} state=directory
+        recurse=yes
+        owner={{ redis_user }}
+
+- name: create sentinel init script
+  template: src={{ item }}
+            dest=/etc/init.d/redis_sentinel_{{ redis_sentinel_port }}
+            mode=0755
+  with_first_found:
+    - files:
+      - "{{ ansible_os_family }}/redis.sentinel.init.j2"
+      paths:
+        - ../templates
+
+- name: set redis sentinel to start at boot
+  service: name=redis_sentinel_{{ redis_sentinel_port }} enabled=yes
+
+- name: ensure log directory exist
+  file: path={{ redis_sentinel_log_file | dirname }}
+        owner={{ redis_user }}
+        group={{ redis_user }}
+        mode=0600
+        state=directory
+        recurse=yes
+
+- name: ensure log file exist and writable to redis user
+  file: path={{ redis_sentinel_log_file}}
+        owner={{ redis_user }}
+        group={{ redis_user }}
+        mode=0600
+        state=touch
+
+- name: ensure sentinel config directory exist
+  file: path=/etc/redis/sentinel
+        owner={{ redis_user }}
+        group={{ redis_user }}
+        mode=0600
+        state=directory
+        recurse=yes
+
+- name: create redis sentinel config file
+  template: src=redis.sentinel.conf.j2 dest=/etc/redis/sentinel/{{ redis_sentinel_port }}.conf
+              owner={{ redis_user }}
+  notify: restart redis sentinel
+
+- name: flush handlers to apply config changes
+  meta: flush_handlers
+
+- name: ensure redis is running
+  service: name=redis_sentinel_{{ redis_sentinel_port }} state=started

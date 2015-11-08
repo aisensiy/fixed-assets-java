@@ -1,0 +1,40 @@
+---
+
+- name: add redis user
+  user:
+    name={{ redis_user }}
+    comment="Redis"
+    home={{ redis_install_dir }}
+    shell=/bin/false
+    system=yes
+
+- name: upload redis
+  copy: src=redis-{{ redis_version }}.tar.gz
+        dest=/usr/local/src/redis-{{ redis_version }}.tar.gz
+
+
+- name: extract redis tarball
+  shell: tar xf /usr/local/src/redis-{{ redis_version }}.tar.gz -C /usr/local/src
+         creates=/usr/local/src/redis-{{ redis_version }}
+
+
+- name: compile redis
+  command: make -j5
+           chdir=/usr/local/src/redis-{{ redis_version }}
+           creates=/usr/local/src/redis-{{ redis_version }}/src/redis-server
+
+- name: create redis install directory
+  file: path={{ redis_install_dir }} state=directory
+
+- name: create /etc/redis
+  file: path=/etc/redis state=directory
+
+- name: create /var/run/redis
+  file: path=/var/run/redis state=directory
+        owner={{ redis_user }}
+
+- name: install redis
+  command: make PREFIX={{ redis_install_dir }} install
+           chdir=/usr/local/src/redis-{{ redis_version }}
+           creates={{ redis_install_dir }}/bin/redis-server
+
