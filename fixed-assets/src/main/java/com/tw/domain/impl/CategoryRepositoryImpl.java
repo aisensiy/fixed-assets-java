@@ -43,11 +43,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category getCategoryById(int id) {
-        return null;
+        return categoryMapper.getById(id);
     }
 
     @Override
     public List<Category> getCategories() {
-        return null;
+        return categoryMapper.getAllCategories();
     }
 }

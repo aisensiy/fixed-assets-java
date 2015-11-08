@@ -29,4 +29,15 @@
          FROM categories as category left join policies as policy on category.id = policy.categoryId
          where category.id = #{id}
     </select>
+
+    <select id="getAllCategories" resultMap="resultCategory">
+        SELECT
+        category.id as id,
+        category.name as name,
+        policy.id as policyId,
+        policy.factor,
+        policy.percentage,
+        policy.termLengthByMonth
+        FROM categories as category left join policies as policy on category.id = policy.categoryId;
+    </select>
 </mapper>
