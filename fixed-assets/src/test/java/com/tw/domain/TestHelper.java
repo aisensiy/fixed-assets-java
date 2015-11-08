@@ -1,5 +1,8 @@
 package com.tw.domain;
 
+import java.util.Date;
+import java.sql.Timestamp;
+
 public class TestHelper {
 
     public static Category categoryWithPolicy(int id, Category category, Policy policy) {
@@ -15,6 +18,7 @@ public class TestHelper {
 
     public static Asset asset(int id, Asset asset) {
         asset.id = id;
+        asset.createdAt = new Timestamp(new Date().getTime());
         return asset;
     }
 }
