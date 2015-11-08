@@ -12,4 +12,9 @@ public class TestHelper {
         policy.id = id;
         return policy;
     }
+
+    public static Asset asset(int id, Asset asset) {
+        asset.id = id;
+        return asset;
+    }
 }

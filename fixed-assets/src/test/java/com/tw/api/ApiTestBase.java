@@ -1,6 +1,7 @@
 package com.tw.api;
 
 import com.tw.api.exception.NotFoundException;
+import com.tw.domain.AssetRepository;
 import com.tw.domain.CategoryRepository;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -18,6 +19,9 @@ public class ApiTestBase extends JerseyTest {
     @Mock
     CategoryRepository categoryRepository;
 
+    @Mock
+    AssetRepository assetRepository;
+
     @Override
     protected Application configure() {
         return new ResourceConfig().packages("com.tw.api")
@@ -27,6 +31,7 @@ public class ApiTestBase extends JerseyTest {
                             @Override
                             protected void configure() {
                                 bind(categoryRepository).to(CategoryRepository.class);
+                                bind(assetRepository).to(AssetRepository.class);
                             }
                         }
                 );
