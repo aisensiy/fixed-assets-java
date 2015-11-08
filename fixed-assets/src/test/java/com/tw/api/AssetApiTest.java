@@ -1,7 +1,6 @@
 package com.tw.api;
 
-import com.tw.domain.Asset;
-import com.tw.domain.TestHelper;
+import com.tw.domain.*;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -9,6 +8,8 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyObject;
@@ -31,14 +32,20 @@ public class AssetApiTest extends ApiTestBase {
         assertThat(response.getStatus(), is(400));
     }
 
-//    @Test
-//    public void should_create_depreciation_with_validate_time() throws Exception {
-//        Asset asset = TestHelper.asset(1, new Asset("name", 100));
-//        when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
-//
-//        final Response response = target("/assets/1/bases").request().post(Entity.form(new Form()));
-//        assertThat(response.getStatus(), is(201));
-//    }
+    @Test
+    public void should_create_depreciation_with_validate_time() throws Exception {
+        Asset asset = TestHelper.assetWithCategoryAndBase(
+                1, new Asset("name", 100),
+                TestHelper.categoryWithPolicy(1, new Category("name"), TestHelper.policy(1, new Policy(10, 1, 12))),
+                null);
+        when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
+
+        final Response response = target("/assets/1/bases").request().post(Entity.form(new Form()));
+        assertThat(response.getStatus(), is(200));
+        final Base currentBase = asset.getCurrentBase();
+        assertThat(currentBase, not(nullValue()));
+        assertThat(currentBase.getAmount(), is(90));
+    }
 
     @Test
     public void should_get_asset_by_id() throws Exception {

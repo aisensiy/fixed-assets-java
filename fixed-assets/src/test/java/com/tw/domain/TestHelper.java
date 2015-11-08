@@ -21,4 +21,11 @@ public class TestHelper {
         asset.createdAt = new Timestamp(new Date().getTime());
         return asset;
     }
+
+    public static Asset assetWithCategoryAndBase(int id, Asset asset, Category category, Base base) {
+        asset.id = id;
+        asset.category = category;
+        asset.currentBase = base;
+        return asset;
+    }
 }
