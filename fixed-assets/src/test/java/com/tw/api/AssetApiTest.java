@@ -8,6 +8,7 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.not;
@@ -62,6 +63,28 @@ public class AssetApiTest extends ApiTestBase {
 
         final Response response = target("/assets/1/bases").request().post(Entity.form(new Form()));
         assertThat(response.getStatus(), is(409));
+    }
+
+    @Test
+    public void should_list_all_depreciation() throws Exception {
+        final long now = new Date().getTime();
+        final int oneyear = 12 * 30 * 24 * 86400000;
+        final Base base1 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - 2 * oneyear)));
+        final Base base2 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - oneyear)));
+        final Base base3 = TestHelper.base(1, new Base(100, 10, new Timestamp(now)));
+        final Policy policy = TestHelper.policy(1, new Policy(10, 1, 12));
+        final Category category = TestHelper.categoryWithPolicy(1, new Category("name"), policy);
+        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100), category, base1, base2, base3);
+        when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
+
+        final Response response = target("/assets/1").request().get();
+        assertThat(response.getStatus(), is(200));
+        Map map = response.readEntity(Map.class);
+        List bases = (List) map.get("bases");
+        assertThat(bases.size(), is(3));
+        Map base = (Map) bases.get(0);
+        assertThat(base.get("amount"), is(100));
+
     }
 
     @Test

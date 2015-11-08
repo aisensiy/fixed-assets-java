@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
+
 public class Asset implements Record {
     private final String name;
     private final int price;
@@ -34,12 +36,19 @@ public class Asset implements Record {
         map.put("name", name);
         map.put("price", price);
         map.put("created", createdAt);
+        map.put("currentBase", currentBase.toJson());
+        map.put("bases", bases.stream().map(Base::toJson).collect(toList()));
         return map;
     }
 
     @Override
     public Map<String, Object> toRefJson() {
-        return toJson();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("price", price);
+        map.put("created", createdAt);
+        map.put("currentBase", currentBase.toJson());
+        return map;
     }
 
     public Base createNewBase(Timestamp timestamp) {

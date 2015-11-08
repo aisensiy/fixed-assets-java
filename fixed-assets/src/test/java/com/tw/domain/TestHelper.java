@@ -1,7 +1,9 @@
 package com.tw.domain;
 
-import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Date;
+
+import static java.util.Arrays.asList;
 
 public class TestHelper {
 
@@ -22,10 +24,16 @@ public class TestHelper {
         return asset;
     }
 
-    public static Asset assetWithCategoryAndBase(int id, Asset asset, Category category, Base base) {
+    public static Asset assetWithCategoryAndBase(int id, Asset asset, Category category, Base... bases) {
         asset.id = id;
         asset.category = category;
-        asset.currentBase = base;
+        asset.currentBase = bases[bases.length - 1];
+        asset.bases.addAll(asList(bases));
         return asset;
+    }
+
+    public static Base base(int id, Base base) {
+        base.id = id;
+        return base;
     }
 }
