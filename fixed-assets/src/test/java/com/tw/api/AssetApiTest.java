@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class AssetApiTest extends ApiTestBase {
     @Test
     public void should_create_asset() throws Exception {
-        final Asset asset = TestHelper.asset(1, new Asset("name", 100));
+        final Asset asset = TestHelper.asset(1, new Asset("name", 100, null));
         when(assetRepository.createAsset(anyObject())).thenReturn(asset);
         final Response response = target("/assets").request().post(Entity.form(new Form()));
         assertThat(response.getStatus(), is(201));
@@ -39,9 +39,9 @@ public class AssetApiTest extends ApiTestBase {
     public void should_create_depreciation_with_validate_time() throws Exception {
         final int oneyear = 12 * 30 * 24 * 86400000;
         Asset asset = TestHelper.assetWithCategoryAndBase(
-                1, new Asset("name", 100),
+                1, new Asset("name", 100, null),
                 TestHelper.categoryWithPolicy(1, new Category("name"), TestHelper.policy(1, new Policy(10, 1, 12))),
-                new Base(90, 10, new Timestamp(new Date().getTime() - oneyear)));
+                new Base(90, 10, new Timestamp(new Date().getTime() - oneyear), null));
         when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
 
         final Response response = target("/assets/1/bases").request().post(Entity.form(new Form()));
@@ -56,9 +56,9 @@ public class AssetApiTest extends ApiTestBase {
         final int notoneyear = 11 * 30 * 24 * 86400000;
         final int termasonyear = 12;
         Asset asset = TestHelper.assetWithCategoryAndBase(
-                1, new Asset("name", 100),
+                1, new Asset("name", 100, null),
                 TestHelper.categoryWithPolicy(1, new Category("name"), TestHelper.policy(1, new Policy(10, 1, termasonyear))),
-                new Base(90, 10, new Timestamp(new Date().getTime() - notoneyear)));
+                new Base(90, 10, new Timestamp(new Date().getTime() - notoneyear), null));
         when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
 
         final Response response = target("/assets/1/bases").request().post(Entity.form(new Form()));
@@ -69,12 +69,12 @@ public class AssetApiTest extends ApiTestBase {
     public void should_list_all_depreciation() throws Exception {
         final long now = new Date().getTime();
         final int oneyear = 12 * 30 * 24 * 86400000;
-        final Base base1 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - 2 * oneyear)));
-        final Base base2 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - oneyear)));
-        final Base base3 = TestHelper.base(1, new Base(100, 10, new Timestamp(now)));
+        final Base base1 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - 2 * oneyear), null));
+        final Base base2 = TestHelper.base(1, new Base(100, 10, new Timestamp(now - oneyear), null));
+        final Base base3 = TestHelper.base(1, new Base(100, 10, new Timestamp(now), null));
         final Policy policy = TestHelper.policy(1, new Policy(10, 1, 12));
         final Category category = TestHelper.categoryWithPolicy(1, new Category("name"), policy);
-        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100), category, base1, base2, base3);
+        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100, null), category, base1, base2, base3);
         when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
 
         final Response response = target("/assets/1").request().get();
@@ -89,7 +89,7 @@ public class AssetApiTest extends ApiTestBase {
 
     @Test
     public void should_get_asset_by_id() throws Exception {
-        Asset asset = TestHelper.asset(1, new Asset("name", 100));
+        Asset asset = TestHelper.asset(1, new Asset("name", 100, null));
         when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
         final Response response = target("/assets/1/").request().get();
         assertThat(response.getStatus(), is(200));
@@ -109,7 +109,7 @@ public class AssetApiTest extends ApiTestBase {
     public void should_sold_asset() throws Exception {
         final Policy policy = TestHelper.policy(1, new Policy(10, 1, 12));
         final Category category = TestHelper.categoryWithPolicy(1, new Category("name"), policy);
-        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100), category);
+        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100, null), category);
         asset.createNewBase(new Timestamp(new Date().getTime()));
         when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
         final Response response = target("/assets/1/sold").request().post(Entity.form(new Form()));

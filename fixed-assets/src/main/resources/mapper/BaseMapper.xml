@@ -3,4 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tw.mapper.BaseMapper">
+        <insert id="saveBase" keyProperty="base.id">
+                insert into bases (amount, depreciation, createdAt, assetId)
+                values(#{base.amount}, #{base.depreciation}, #{base.createdAt}, #{base.asset.id})
+        </insert>
 </mapper>

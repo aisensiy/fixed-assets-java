@@ -8,13 +8,20 @@ public class Base implements Record {
     private Timestamp createdAt;
     private int amount;
     private int depreciation;
-    public int id;
+    int id;
 
-    public Base(int amount, int depreciation, Timestamp createdAt) {
+    public Asset getAsset() {
+        return asset;
+    }
+
+    Asset asset;
+
+    public Base(int amount, int depreciation, Timestamp createdAt, Asset asset) {
 
         this.amount = amount;
         this.depreciation = depreciation;
         this.createdAt = createdAt;
+        this.asset = asset;
     }
 
     public Base() {

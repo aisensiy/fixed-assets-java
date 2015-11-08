@@ -7,12 +7,44 @@
         <id property="id" column="id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
+        <result property="sold" column="sold" javaType="boolean" />
+        <association resultMap="com.tw.mapper.CategoryMapper.resultCategory" property="category" />
+        <collection property="bases" javaType="com.tw.domain.Base">
+            <id property="id" column="baseId"/>
+            <result property="depreciation" column="baseDepreciation" />
+            <result property="amount" column="baseAmount" />
+            <result property="createdAt" column="baseCreatedAt" />
+        </collection>
     </resultMap>
     <insert id="saveAsset" keyProperty="asset.id">
-        insert into assets (name, price) values (#{asset.name}, #{asset.price})
+        insert into assets (name, price, categoryId) values (#{asset.name}, #{asset.price}, #{asset.category.id})
     </insert>
 
+    <update id="updateAsset">
+        update assets set sold = #{asset.sold} where id = #{asset.id}
+    </update>
+
     <select id="findAssetById" resultMap="assetMap">
-      select id, name, price from assets where id = #{id}
+      SELECT
+         a.id as id,
+         a.name as name,
+         a.price as price,
+         a.sold as sold,
+         b.id as categoryId,
+         b.name as categoryName,
+         c.id as policyId,
+         c.factor as policyFactor,
+         c.percentage as policyPercentage,
+         c.termLengthByMonth as policyTermLengthByMonth,
+         d.depreciation as baseDepreciation,
+         d.amount as baseAmount,
+         d.createdAt as baseCreatedAt,
+         d.id as baseId
+         FROM assets a
+         left join categories b on a.categoryId = b.id
+         left join policies as c on b.id = c.categoryId
+         left join bases d on d.assetId = a.id
+         where a.id = #{id}
+         order by d.createdAt
     </select>
 </mapper>

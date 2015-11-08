@@ -25,7 +25,7 @@ public class BasesApi {
     public Response createNewBase(@Context AssetRepository assetRepository) {
         final Base newBase = asset.createNewBase(new Timestamp(new Date().getTime()));
         if (newBase != null) {
-            assetRepository.addBaseToAsset(newBase, asset);
+            assetRepository.addBase(newBase);
             return Response.ok().build();
         } else {
             return Response.status(409).build();

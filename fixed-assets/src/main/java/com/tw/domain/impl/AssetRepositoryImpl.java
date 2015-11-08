@@ -19,23 +19,24 @@ public class AssetRepositoryImpl implements AssetRepository {
 
     @Override
     public Asset createAsset(MultivaluedMap<String, String> map) {
-        Asset asset = new Asset(map.getFirst("name"), Integer.parseInt(map.getFirst("price")));
+        Asset asset = new Asset(map.getFirst("name"), Integer.parseInt(map.getFirst("price")), null);
         assetMapper.saveAsset(asset);
         return assetMapper.findAssetById(asset.getId());
     }
 
     @Override
     public Asset getAssetById(int id) {
-        return null;
+        return assetMapper.findAssetById(id);
     }
 
     @Override
-    public Asset addBaseToAsset(Base newBase, Asset asset) {
-        return null;
+    public Asset addBase(Base newBase) {
+        baseMapper.saveBase(newBase);
+        return assetMapper.findAssetById(newBase.getAsset().getId());
     }
 
     @Override
     public void updateAsset(Asset asset) {
-
+        assetMapper.updateAsset(asset);
     }
 }

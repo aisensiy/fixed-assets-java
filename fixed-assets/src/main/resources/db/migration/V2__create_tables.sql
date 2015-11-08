@@ -16,12 +16,14 @@ CREATE TABLE assets (
   createdAt TIMESTAMP,
   name VARCHAR(255),
   price INTEGER,
-  sold INTEGER
+  sold INTEGER,
+  categoryId INTEGER
 );
 
 CREATE TABLE bases (
   id integer PRIMARY KEY AUTO_INCREMENT,
+  assetId integer,
   createdAt TIMESTAMP,
   amount INTEGER,
-  deprecation INTEGER
+  depreciation INTEGER
 );

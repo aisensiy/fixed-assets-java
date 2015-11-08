@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tw.mapper.CategoryMapper">
     <resultMap id="resultCategory" type="com.tw.domain.Category">
-        <id property="id" column="id" />
-        <result property="name" column="name" />
+        <id property="id" column="categoryId" />
+        <result property="name" column="categoryName" />
         <association property="policy" javaType="com.tw.domain.Policy">
             <id property="id" column="policyId" />
-            <result property="percentage" column="percentage"/>
-            <result property="factor" column="factor" />
-            <result property="termLengthByMonth" column="termLengthByMonth" />
+            <result property="percentage" column="policyPercentage"/>
+            <result property="factor" column="policyFactor" />
+            <result property="termLengthByMonth" column="policyTermLengthByMonth" />
         </association>
     </resultMap>
 
@@ -20,20 +20,20 @@
 
     <select id="getCategoryById" resultMap="resultCategory">
         SELECT
-         category.id as id,
-         category.name as name,
-         policy.id as policyId,
-         policy.factor,
-         policy.percentage,
-         policy.termLengthByMonth
-         FROM categories as category left join policies as policy on category.id = policy.categoryId
-         where category.id = #{id}
+         a.id as categoryId,
+         a.name as categoryName,
+         b.id as policyId,
+         b.factor as policyFactor,
+         b.percentage as policyPercentage,
+         b.termLengthByMonth as policyTermLengthByMonth
+         FROM categories a left join policies b on a.id = b.categoryId
+         where a.id = #{id}
     </select>
 
     <select id="getAllCategories" resultMap="resultCategory">
         SELECT
-        category.id as id,
-        category.name as name,
+        category.id as categoryId,
+        category.name as categoryName,
         policy.id as policyId,
         policy.factor,
         policy.percentage,

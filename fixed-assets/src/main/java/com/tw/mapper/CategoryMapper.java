@@ -8,7 +8,7 @@ import java.util.List;
 public interface CategoryMapper {
     int saveCategory(@Param("category") Category category);
 
-    Category getCategoryById(int id);
+    Category getCategoryById(@Param("id") int id);
 
     List<Category> getAllCategories();
 }

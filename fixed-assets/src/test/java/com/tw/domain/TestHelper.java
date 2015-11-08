@@ -21,6 +21,8 @@ public class TestHelper {
     public static Asset asset(int id, Asset asset) {
         asset.id = id;
         asset.createdAt = new Timestamp(new Date().getTime());
+        asset.category = categoryWithPolicy(1, new Category("name"), policy(1, new Policy(1, 1, 1)));
+        asset.createNewBase(new Timestamp(new Date().getTime()));
         return asset;
     }
 
@@ -30,7 +32,6 @@ public class TestHelper {
         if (bases.length == 0) {
             return asset;
         }
-        asset.currentBase = bases[bases.length - 1];
         asset.bases.addAll(asList(bases));
         return asset;
     }

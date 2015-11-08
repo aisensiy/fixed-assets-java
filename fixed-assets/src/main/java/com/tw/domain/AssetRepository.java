@@ -7,7 +7,7 @@ public interface AssetRepository {
 
     Asset getAssetById(int id);
 
-    Asset addBaseToAsset(Base newBase, Asset asset);
+    Asset addBase(Base newBase);
 
     void updateAsset(Asset asset);
 }

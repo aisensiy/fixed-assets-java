@@ -13,14 +13,14 @@ public class Asset implements Record {
     private int price;
     Timestamp createdAt;
     int id;
-    Base currentBase;
     public Category category;
     List<Base> bases = new ArrayList<>();
-    private boolean sold;
+    private boolean sold = false;
 
-    public Asset(String name, int price) {
+    public Asset(String name, int price, Category category) {
         this.name = name;
         this.price = price;
+        this.category = category;
     }
 
     public Asset() {
@@ -30,8 +30,10 @@ public class Asset implements Record {
         return id;
     }
 
-    public Base currentBase() {
-        return currentBase;
+    public Base getCurrentBase() {
+        if (bases.size() == 0)
+            return null;
+        return bases.get(bases.size() - 1);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class Asset implements Record {
         map.put("name", name);
         map.put("price", price);
         map.put("created", createdAt);
-        map.put("currentBase", currentBase.toJson());
+        map.put("currentBase", getCurrentBase().toJson());
         map.put("bases", bases.stream().map(Base::toJson).collect(toList()));
         return map;
     }
@@ -51,39 +53,39 @@ public class Asset implements Record {
         map.put("name", name);
         map.put("price", price);
         map.put("created", createdAt);
-        map.put("currentBase", currentBase.toJson());
+        map.put("currentBase", getCurrentBase().toJson());
         return map;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     public Base createNewBase(Timestamp timestamp) {
-        final Timestamp currentBaseTimestamp;
+        final Timestamp currentTimestamp;
         final int amount;
 
-        if (currentBase != null) {
-            currentBaseTimestamp = currentBase.getCreatedAt();
-            amount = currentBase.getAmount();
+        if (getCurrentBase() != null) {
+            currentTimestamp = getCurrentBase().getCreatedAt();
+            amount = getCurrentBase().getAmount();
         } else {
-            currentBaseTimestamp = createdAt;
+            currentTimestamp = createdAt;
             amount = price;
         }
 
         Policy policy = category.getPolicy();
         final int termLengthByMonth = policy.getTermLengthByMonth();
-        if (currentBase != null && termLengthByMonth * 30 * 24 * 3600 * 1000 + currentBaseTimestamp.getTime() < timestamp.getTime()) {
+        final int oneMonth = 30 * 24 * 3600 * 1000;
+        if (getCurrentBase() != null && termLengthByMonth * oneMonth + currentTimestamp.getTime() < timestamp.getTime()) {
             return null;
         }
         int depreciation = (int) (amount * (0.01 * policy.getPercentage()) * policy.getFactor());
         int newBaseAmount = amount - depreciation;
 
-        final Base newBase = new Base(newBaseAmount, depreciation, timestamp);
-        currentBase = newBase;
+        final Base newBase = new Base(newBaseAmount, depreciation, timestamp, this);
         bases.add(newBase);
 
         return newBase;
-    }
-
-    public Base getCurrentBase() {
-        return currentBase;
     }
 
     public void sell() {
