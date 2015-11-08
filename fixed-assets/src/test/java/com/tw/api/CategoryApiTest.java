@@ -10,8 +10,10 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -62,5 +64,20 @@ public class CategoryApiTest extends ApiTestBase {
         when(categoryRepository.getCategoryById(eq(1))).thenReturn(null);
         final Response response = target("/categories/1").request().get();
         assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_list_all_category() throws Exception {
+        when(categoryRepository.getCategories()).thenReturn(asList(
+                TestHelper.categoryWithPolicy(1,
+                        new Category("name"), TestHelper.policy(1, new Policy(10, 1, 12))),
+                TestHelper.categoryWithPolicy(2,
+                        new Category("name"), TestHelper.policy(2, new Policy(10, 1, 12)))
+        ));
+
+        final Response response = target("/categories").request().get();
+        assertThat(response.getStatus(), is(200));
+        List list = response.readEntity(List.class);
+        assertThat(list.size(), is(2));
     }
 }
