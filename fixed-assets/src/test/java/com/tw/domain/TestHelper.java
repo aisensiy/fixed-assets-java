@@ -27,6 +27,9 @@ public class TestHelper {
     public static Asset assetWithCategoryAndBase(int id, Asset asset, Category category, Base... bases) {
         asset.id = id;
         asset.category = category;
+        if (bases.length == 0) {
+            return asset;
+        }
         asset.currentBase = bases[bases.length - 1];
         asset.bases.addAll(asList(bases));
         return asset;

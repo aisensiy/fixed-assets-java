@@ -101,7 +101,19 @@ public class AssetApiTest extends ApiTestBase {
     @Test
     public void should_get_404_if_asset_not_exist() throws Exception {
         when(assetRepository.getAssetById(eq(1))).thenReturn(null);
-        final Response response = target("/assets/1/").request().get();
+        final Response response = target("/assets/1").request().get();
         assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_sold_asset() throws Exception {
+        final Policy policy = TestHelper.policy(1, new Policy(10, 1, 12));
+        final Category category = TestHelper.categoryWithPolicy(1, new Category("name"), policy);
+        final Asset asset = TestHelper.assetWithCategoryAndBase(1, new Asset("name", 100), category);
+        asset.createNewBase(new Timestamp(new Date().getTime()));
+        when(assetRepository.getAssetById(eq(1))).thenReturn(asset);
+        final Response response = target("/assets/1/sold").request().post(Entity.form(new Form()));
+        assertThat(response.getStatus(), is(200));
+        assertThat(asset.isSold(), is(true));
     }
 }

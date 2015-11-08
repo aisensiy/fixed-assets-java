@@ -16,6 +16,7 @@ public class Asset implements Record {
     Base currentBase;
     public Category category;
     List<Base> bases = new ArrayList<>();
+    private boolean sold;
 
     public Asset(String name, int price) {
         this.name = name;
@@ -80,5 +81,13 @@ public class Asset implements Record {
 
     public Base getCurrentBase() {
         return currentBase;
+    }
+
+    public void sell() {
+        sold = true;
+    }
+
+    public boolean isSold() {
+        return sold;
     }
 }
