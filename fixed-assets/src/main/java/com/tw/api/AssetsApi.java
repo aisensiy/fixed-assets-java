@@ -6,14 +6,15 @@ import com.tw.domain.Asset;
 import com.tw.domain.AssetRepository;
 import com.tw.domain.Base;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import static java.util.stream.Collectors.toList;
 
 @Path("assets")
 public class AssetsApi {
@@ -28,6 +29,12 @@ public class AssetsApi {
         final Base newBase = asset.createNewBase(new Timestamp(new Date().getTime()));
         assetRepository.addBase(newBase);
         return Response.created(Routing.asset(asset)).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssets(@Context AssetRepository assetRepository) {
+        return Response.ok().entity(assetRepository.getAssets().stream().map(Asset::toJson).collect(toList())).build();
     }
 
     @Path("{assetId}")

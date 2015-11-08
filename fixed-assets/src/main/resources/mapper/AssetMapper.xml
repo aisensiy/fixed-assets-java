@@ -25,7 +25,18 @@
     </update>
 
     <select id="findAssetById" resultMap="assetMap">
-      SELECT
+      <include refid="getAsset" />
+         where a.id = #{id}
+         order by d.createdAt
+    </select>
+
+    <select id="getAllAssets" resultMap="assetMap">
+        <include refid="getAsset"/>
+        order by d.createdAt
+    </select>
+
+    <sql id="getAsset">
+        SELECT
          a.id as id,
          a.name as name,
          a.price as price,
@@ -44,7 +55,5 @@
          left join categories b on a.categoryId = b.id
          left join policies as c on b.id = c.categoryId
          left join bases d on d.assetId = a.id
-         where a.id = #{id}
-         order by d.createdAt
-    </select>
+    </sql>
 </mapper>

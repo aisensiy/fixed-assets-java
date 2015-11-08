@@ -7,6 +7,7 @@ import com.tw.mapper.AssetMapper;
 import com.tw.mapper.BaseMapper;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
 
 public class AssetRepositoryImpl implements AssetRepository {
     private final AssetMapper assetMapper;
@@ -38,5 +39,10 @@ public class AssetRepositoryImpl implements AssetRepository {
     @Override
     public void updateAsset(Asset asset) {
         assetMapper.updateAsset(asset);
+    }
+
+    @Override
+    public List<Asset> getAssets() {
+        return assetMapper.getAllAssets();
     }
 }

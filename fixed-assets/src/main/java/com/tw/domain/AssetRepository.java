@@ -1,6 +1,7 @@
 package com.tw.domain;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
 
 public interface AssetRepository {
     Asset createAsset(MultivaluedMap<String, String> map);
@@ -10,4 +11,6 @@ public interface AssetRepository {
     Asset addBase(Base newBase);
 
     void updateAsset(Asset asset);
+
+    List<Asset> getAssets();
 }

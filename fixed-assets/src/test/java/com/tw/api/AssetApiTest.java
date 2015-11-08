@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -115,5 +117,20 @@ public class AssetApiTest extends ApiTestBase {
         final Response response = target("/assets/1/sold").request().post(Entity.form(new Form()));
         assertThat(response.getStatus(), is(200));
         assertThat(asset.isSold(), is(true));
+    }
+
+    @Test
+    public void should_list_assets_with_current_base() throws Exception {
+        when(assetRepository.getAssets()).thenReturn(asList(
+                TestHelper.asset(1, new Asset("name1", 100000, null)),
+                TestHelper.asset(2, new Asset("name2", 200000, null))
+        ));
+        final Response response = target("/assets").request().get();
+        assertThat(response.getStatus(), is(200));
+        List list = response.readEntity(List.class);
+        assertThat(list.size(), is(2));
+        Map map = (Map) list.get(0);
+        assertThat(map.get("id"), is(1));
+        assertThat(map.get("currentBase"), notNullValue());
     }
 }

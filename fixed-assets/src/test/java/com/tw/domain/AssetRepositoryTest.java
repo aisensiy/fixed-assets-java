@@ -12,6 +12,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -49,16 +50,7 @@ public class AssetRepositoryTest extends RepositoryTestBase {
 
     @Test
     public void should_get_asset_with_bases() throws Exception {
-        final int oneMonth = 1;
-
-        Category category = new Category("name");
-        categoryMapper.saveCategory(category);
-        Policy policy = new Policy(10, 1, oneMonth);
-        policyMapper.savePolicy(category.getId(), policy);
-
-        Asset asset = new Asset("name", 10000, category);
-        assetMapper.saveAsset(asset);
-
+        Asset asset = saveAsset(new Category("name"), new Policy(10, 1, 1), "name1", 10000);
         asset = assetRepository.getAssetById(asset.getId());
         assertThat(asset.getCategory(), not(nullValue()));
         assertThat(asset.getCategory().getPolicy(), not(nullValue()));
@@ -66,10 +58,33 @@ public class AssetRepositoryTest extends RepositoryTestBase {
         final Base newBase = asset.createNewBase(new Timestamp(new Date().getTime()));
         asset = assetRepository.addBase(newBase);
         assertThat(asset.bases.size(), is(1));
+    }
 
+    @Test
+    public void should_sell_asset() throws Exception {
+        Asset asset = saveAsset(new Category("name"), new Policy(10, 1, 1), "name1", 10000);
+        final Base newBase = asset.createNewBase(new Timestamp(new Date().getTime()));
+        asset = assetRepository.addBase(newBase);
         asset.sell();
         assetRepository.updateAsset(asset);
         asset = assetRepository.getAssetById(asset.getId());
         assertThat(asset.isSold(), is(true));
+    }
+
+    @Test
+    public void should_list_assets() throws Exception {
+        final Asset asset1 = saveAsset(new Category("name"), new Policy(10, 1, 1), "name1", 10000);
+        final Asset asset2 = saveAsset(new Category("name"), new Policy(10, 1, 1), "name2", 10000);
+        List<Asset> assetList = assetRepository.getAssets();
+        assertThat(assetList.size(), is(2));
+        assertThat(assetList.get(0).getName(), is("name1"));
+    }
+
+    private Asset saveAsset(Category category, Policy policy, String name, int price) {
+        categoryMapper.saveCategory(category);
+        policyMapper.savePolicy(category.getId(), policy);
+        Asset asset = new Asset(name, price, category);
+        assetMapper.saveAsset(asset);
+        return assetMapper.findAssetById(asset.getId());
     }
 }

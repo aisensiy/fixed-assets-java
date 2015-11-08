@@ -1,5 +1,7 @@
 package com.tw.domain;
 
+import com.tw.api.util.Routing;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +42,8 @@ public class Asset implements Record {
     public Map<String, Object> toJson() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
+        map.put("uri", Routing.asset(this));
+        map.put("id", id);
         map.put("price", price);
         map.put("created", createdAt);
         map.put("currentBase", getCurrentBase().toJson());
@@ -51,6 +55,8 @@ public class Asset implements Record {
     public Map<String, Object> toRefJson() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
+        map.put("id", id);
+        map.put("uri", Routing.asset(this));
         map.put("price", price);
         map.put("created", createdAt);
         map.put("currentBase", getCurrentBase().toJson());
@@ -94,5 +100,9 @@ public class Asset implements Record {
 
     public boolean isSold() {
         return sold;
+    }
+
+    public String getName() {
+        return name;
     }
 }
