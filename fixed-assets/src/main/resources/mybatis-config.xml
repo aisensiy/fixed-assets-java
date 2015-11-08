@@ -39,6 +39,8 @@
         </environment>
     </environments>
     <mappers>
+        <mapper resource="mapper/AssetMapper.xml"/>
+        <mapper resource="mapper/BaseMapper.xml"/>
         <mapper resource="mapper/CategoryMapper.xml"/>
         <mapper resource="mapper/PolicyMapper.xml"/>
     </mappers>

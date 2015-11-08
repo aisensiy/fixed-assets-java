@@ -9,8 +9,8 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class Asset implements Record {
-    private final String name;
-    private final int price;
+    private String name;
+    private int price;
     Timestamp createdAt;
     int id;
     Base currentBase;
@@ -21,6 +21,9 @@ public class Asset implements Record {
     public Asset(String name, int price) {
         this.name = name;
         this.price = price;
+    }
+
+    public Asset() {
     }
 
     public int getId() {

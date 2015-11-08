@@ -32,18 +32,18 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         }
 
         Category category = new Category(map.getFirst("name"));
-        categoryMapper.save(category);
+        categoryMapper.saveCategory(category);
         Policy policy = new Policy(
                 Integer.parseInt(map.getFirst("policyPercentage")),
                 Integer.parseInt(map.getFirst("policyFactor")),
                 Integer.parseInt(map.getFirst("policyTermLengthByMonth")));
         policyMapper.savePolicy(category.getId(), policy);
-        return categoryMapper.getById(category.getId());
+        return categoryMapper.getCategoryById(category.getId());
     }
 
     @Override
     public Category getCategoryById(int id) {
-        return categoryMapper.getById(id);
+        return categoryMapper.getCategoryById(id);
     }
 
     @Override

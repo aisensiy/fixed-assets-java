@@ -5,10 +5,10 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface CategoryMapper {
-    int saveCategory(@Param("category") Category category);
+public interface BaseMapper {
+    int save(@Param("category") Category category);
 
-    Category getCategoryById(int id);
+    Category getById(int id);
 
     List<Category> getAllCategories();
 }

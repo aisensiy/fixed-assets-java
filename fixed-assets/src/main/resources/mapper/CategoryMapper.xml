@@ -14,11 +14,11 @@
         </association>
     </resultMap>
 
-    <insert id="save"  keyProperty="category.id">
+    <insert id="saveCategory"  keyProperty="category.id">
         INSERT INTO categories (name) values (#{category.name})
     </insert>
 
-    <select id="getById" resultMap="resultCategory">
+    <select id="getCategoryById" resultMap="resultCategory">
         SELECT
          category.id as id,
          category.name as name,

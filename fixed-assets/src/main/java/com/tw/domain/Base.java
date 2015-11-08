@@ -7,7 +7,7 @@ import java.util.Map;
 public class Base implements Record {
     private Timestamp createdAt;
     private int amount;
-    private final int depreciation;
+    private int depreciation;
     public int id;
 
     public Base(int amount, int depreciation, Timestamp createdAt) {
@@ -15,6 +15,9 @@ public class Base implements Record {
         this.amount = amount;
         this.depreciation = depreciation;
         this.createdAt = createdAt;
+    }
+
+    public Base() {
     }
 
     public Timestamp getCreatedAt() {
